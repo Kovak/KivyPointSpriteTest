@@ -1,7 +1,7 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.graphics import (PushMatrix, PopMatrix, Mesh, 
-    Color, Fbo, RenderContext)
+    Color, Fbo, RenderContext, Rectangle)
 from random import random, choice
 from kivy.properties import ObjectProperty
 from kivy.core.image import Image
@@ -21,14 +21,12 @@ class PointRenderer(Widget):
             w_size = (100, 100)
         with self.canvas:
             self.fbo = Fbo(size=w_size, use_parent_projection=True)
+        with self.fbo:
+            Color(0., 0., 0.)
+            Rectangle(size=w_size)
         super(PointRenderer, self).__init__(**kwargs) 
-        Clock.schedule_interval(self.update_glsl, 0)
         self.texture = self.fbo.texture
         self.draw_stars_simple(20)
-
-    def update_glsl(self, *largs):
-        self.canvas['time'] = Clock.get_boottime()
-        self.canvas['resolution'] = map(float, self.size)
 
     def draw_stars_simple(self, number):
         star_list = []
